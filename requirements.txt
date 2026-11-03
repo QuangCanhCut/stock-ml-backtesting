@@ -1,0 +1,24 @@
+# --- Data Ingestion & Storage ---
+yfinance
+pandas
+numpy
+pyarrow
+pyyaml
+
+# --- Quantitative EDA & Statistical Tests (Day 1 & 2) ---
+scipy
+statsmodels
+matplotlib
+seaborn
+
+# --- Machine Learning & Deep Learning (Day 3 - Finpros JD Requirements) ---
+scikit-learn
+lightgbm
+xgboost
+torch
+
+# --- Notebook & Testing ---
+jupyter
+ipykernel
+pytest
+tqdm
