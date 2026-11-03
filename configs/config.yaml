@@ -1,0 +1,63 @@
+# ============================================================================
+# CONFIGURATION FOR HPG QUANTITATIVE TRADING & BACKTESTING PROJECT
+# Target Role: AI Quantitative Researcher
+# ============================================================================
+
+project:
+  name: "HPG_Stock_Movement_Prediction_Backtesting"
+  random_seed: 42
+
+data:
+  ticker: "HPG"
+  yf_ticker: "HPG.VN"          # Mã trên Yahoo Finance (Sàn HOSE)
+  start_date: "2016-01-01"     # Chuỗi dữ liệu 10 năm
+  end_date: "2026-11-01"
+  interval: "1d"
+  raw_parquet_path: "data/raw/HPG_10y_daily.parquet"
+  raw_csv_path: "data/raw/HPG_10y_daily.csv"
+  processed_path: "data/processed/HPG_features_labeled.parquet"
+
+market_microstructure:
+  exchange: "HOSE"
+  trading_days_per_year: 252
+  daily_price_limit: 0.07      # Biên độ trần/sàn ±7% của sàn HOSE
+  limit_hit_threshold: 0.067   # Ngưỡng nhận diện phiên kịch trần/sàn (>= 6.7%)
+  settlement_cycle: 2.5        # Chu kỳ thanh toán T+2.5 tại Việt Nam
+  
+  # Chi phí giao dịch thực tế tại Việt Nam (Dùng cho RQ2 & Labeling)
+  commission_buy: 0.0015       # 0.15% phí môi giới chiều mua
+  commission_sell: 0.0015      # 0.15% phí môi giới chiều bán
+  tax_sell: 0.0010             # 0.10% thuế TNCN khi bán chứng khoán
+  slippage: 0.0005             # 0.05% trượt giá ước tính mỗi chiều (HPG thanh khoản cao)
+  round_trip_cost: 0.0045      # Tổng phí 1 vòng Mua -> Bán (~0.45% hay 45 bps)
+
+eda:
+  acf_lags: 30
+  ljung_box_lags: [1, 5, 10, 20]
+  rolling_vol_windows: [21, 63] # 21 phiên (~1 tháng) và 63 phiên (~1 quý)
+  var_confidence_levels: [0.95, 0.99]
+  figures_dir: "results/figures"
+  report_path: "results/eda_report.txt"
+
+features:
+  return_lags: [1, 2, 3, 5, 10, 21]
+  sma_windows: [10, 20, 50, 200]
+  ema_windows: [12, 26]
+  rsi_window: 14
+  atr_window: 14
+  bollinger_window: 20
+  bollinger_std: 2.0
+  volume_zscore_window: 20
+
+validation:
+  method: "walk_forward"       # Chống Look-ahead bias tuyệt đối
+  initial_train_years: 5       # 5 năm đầu (2016-2020) làm tập Train khởi tạo
+  val_months: 12               # 1 năm Validation
+  test_step_months: 12         # Cuốn chiếu (Expanding/Rolling window) mỗi 1 năm
+  embargo_days: 5              # Khoảng cách an toàn giữa Train và Test chống rò rỉ
+
+backtest:
+  initial_capital: 100000000   # 100 triệu VNĐ
+  risk_free_rate: 0.045        # Lãi suất phi rủi ro tham chiếu (~4.5%/năm tiền gửi)
+  prob_threshold_long: 0.53    # Ngưỡng xác suất P(y=1) để vào lệnh Mua (lọc nhiễu phí)
+  prob_threshold_exit: 0.48    # Ngưỡng xác suất để đóng vị thế
