@@ -36,11 +36,12 @@ eda:
   ljung_box_lags: [1, 5, 10, 20]
   rolling_vol_windows: [21, 63] # 21 phiên (~1 tháng) và 63 phiên (~1 quý)
   var_confidence_levels: [0.95, 0.99]
-  figures_dir: "results/figures"
+  figures_dir: "results/figures/notebook_01"
   report_path: "results/eda_report.txt"
 
 features:
   return_lags: [1, 2, 3, 5, 10, 21]
+  momentum_windows: [5, 10, 21] # Cumulative log return windows
   sma_windows: [10, 20, 50, 200]
   ema_windows: [12, 26]
   rsi_window: 14
@@ -48,6 +49,9 @@ features:
   bollinger_window: 20
   bollinger_std: 2.0
   volume_zscore_window: 20
+
+labeling:
+  fixed_holding_sessions: 3 # Số khoảng phiên từ Open(t+1) đến Open(t+1+h)
 
 validation:
   method: "walk_forward"       # Chống Look-ahead bias tuyệt đối
