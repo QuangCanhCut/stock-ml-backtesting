@@ -1,5 +1,5 @@
 """
-MODULE: src/data_loader.py
+MODULE: src/data_loader/legacy.py
 MỤC ĐÍCH: 
     Thu thập, điều chỉnh giá (Adjusted Price), kiểm định chất lượng (Sanity Check) 
     và lưu trữ dữ liệu lịch sử 10 năm của cổ phiếu HPG chuẩn Quantitative Finance.
@@ -159,54 +159,5 @@ def clean_and_validate_ohlcv(df: pd.DataFrame) -> pd.DataFrame:
 # 5. HÀM ĐIỀU PHỐI CHÍNH (MAIN PIPELINE ORCHESTRATOR)
 # ============================================================================
 def run_data_pipeline(config_path: str = "configs/config.yaml") -> pd.DataFrame:
-    """
-    Hàm chạy toàn bộ quy trình: Đọc Config -> Tải Data -> Làm sạch -> Lưu xuống ổ cứng.
-    """
-    # 1. Đọc cấu hình từ file yaml
-    cfg = load_config(config_path)
-    data_cfg = cfg["data"]
-
-    yf_ticker = data_cfg["yf_ticker"]     # "HPG.VN"
-    start_date = data_cfg["start_date"]   # "2016-01-01"
-    end_date = data_cfg["end_date"]       # "2026-11-01"
-
-    # 2. Tải dữ liệu lịch sử từ Yahoo Finance
-    df = fetch_from_yfinance(yf_ticker, start_date, end_date)
-
-    # 3. Kiểm định và làm sạch dữ liệu
-    df = clean_and_validate_ohlcv(df)
-
-    # 4. Lưu dữ liệu xuống ổ cứng (trong thư mục data/raw/)
-    parquet_path = Path(data_cfg["raw_parquet_path"])
-    csv_path = Path(data_cfg["raw_csv_path"])
-    
-    # Tự động tạo thư mục data/raw/ nếu trên máy chưa có
-    parquet_path.parent.mkdir(parents=True, exist_ok=True)
-
-    # Lưu bản .parquet (Dùng để load vào code Python/PyTorch cực nhanh và giữ nguyên kiểu DateTime)
-    df.to_parquet(parquet_path)
-    
-    # Lưu bản .csv (Dùng để bạn mở xem trực tiếp bằng Excel hoặc VS Code)
-    df.to_csv(csv_path)
-    
-    logger.info(f"Đã đóng băng dữ liệu thành công tại:\n  -> {parquet_path}\n  -> {csv_path}")
-
-    return df
-
-
-# ============================================================================
-# 6. ĐIỂM KHỞI CHẠY KHI GÕ LỆNH `python src/data_loader.py`
-# ============================================================================
-if __name__ == "__main__":
-    # Khi chạy trực tiếp file này trên Terminal, khối lệnh dưới đây sẽ được thực thi
-    df_hpg = run_data_pipeline()
-    
-    print("\n" + "=" * 65)
-    print("KIỂM TRA NHANH 5 PHIÊN GIAO DỊCH ĐẦU TIÊN (NĂM 2016):")
-    print("=" * 65)
-    print(df_hpg.head(5))
-    
-    print("\n" + "=" * 65)
-    print("KIỂM TRA NHANH 5 PHIÊN GIAO DỊCH MỚI NHẤT CỦA HPG:")
-    print("=" * 65)
-    print(df_hpg.tail(5))
+    """Ch?n pipeline c? v? t?ng ghi ?? Raw v? kh?ng c? Quality Gate."""
+    raise RuntimeError("Pipeline cũ bị khóa; dùng python -m src.data_loader audit hoặc build.")

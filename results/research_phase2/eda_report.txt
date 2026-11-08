@@ -1,0 +1,24 @@
+======================================================================
+BÁO CÁO KIỂM ĐỊNH THỐNG KÊ QUANTITATIVE EDA - CỔ PHIẾU HPG (2016-2026)
+======================================================================
+
+[FACT 1] KIỂM ĐỊNH TÍNH DỪNG (ADF TEST):
+  - Giá đóng cửa (Close) : ADF Stat = -1.4980, p-value = 0.5345 -> KHÔNG DỪNG (Non-stationary - Đúng lý thuyết)
+  - Lợi suất (Log Return): ADF Stat = -50.5319, p-value = 0.0000e+00 -> DỪNG (Stationary - Đạt chuẩn đưa vào ML)
+
+[FACT 2] ĐẶC TRƯNG PHÂN PHỐI LỢI SUẤT (FAT-TAILS & MOMENTS):
+  - Lợi suất kỳ vọng trung bình ngày : 0.0783% (~ 19.73%/năm)
+  - Độ biến động hàng năm (Ann. Vol): 32.52%
+  - Độ lệch (Skewness)             : -0.0657 (Lệch âm cho thấy rủi ro sập sốc lớn hơn tăng)
+  - Độ nhọn đuôi béo (Kurtosis)      : 1.9376 (Rất lớn > 0, chứng minh đuôi béo hơn phân phối chuẩn)
+  - Jarque-Bera Normality Test      : p-value = 2.6193e-92 -> Bác bỏ tuyệt đối phân phối chuẩn Gaussian!
+
+[FACT 3] KIỂM ĐỊNH TỰ TƯƠNG QUAN LJUNG-BOX (LAGS 5, 10, 20):
+  - Trên chuỗi Return r_t (Lấy Lag 20)     : p-value = 0.1032 (Thường > 0.05, không có tương quan tuyến tính tuyến tính)
+  - Trên chuỗi tuyệt đối |r_t| (Biến động): p-value = 3.6595e-153 (Cực kỳ nhỏ < 0.01 -> Tụ cụm biến động cực mạnh!)
+
+[FACT 4] PHÂN TÍCH TỶ LỆ MỤC TIÊU & SÀN HOSE (±7%):
+  - Số phiên HPG biến động kịch trần/sàn (>= 6.7%): 39 phiên trong 10 năm
+  - Tỷ lệ phiên tăng giá ngày mai (Always-Long)    : 47.52%
+  - Tỷ lệ phiên tăng vượt phí giao dịch (0.45%)     : 38.48% (Thách thức lớn cho mô hình ML)
+======================================================================
