@@ -1,0 +1,101 @@
+{
+  "rows": 2702,
+  "columns": 37,
+  "feature_count": 26,
+  "label_count": 6,
+  "missing": {
+    "log_return": 1,
+    "return_lag_1": 2,
+    "return_lag_2": 3,
+    "return_lag_3": 4,
+    "return_lag_5": 6,
+    "return_lag_10": 11,
+    "return_lag_21": 22,
+    "sma_ratio_10": 9,
+    "sma_ratio_20": 19,
+    "sma_ratio_50": 49,
+    "sma_ratio_200": 199,
+    "ema_ratio_12": 11,
+    "ema_ratio_26": 25,
+    "macd_ratio": 25,
+    "momentum_5": 5,
+    "momentum_10": 10,
+    "momentum_21": 21,
+    "rsi_14": 14,
+    "volatility_21": 21,
+    "volatility_63": 63,
+    "atr_ratio_14": 13,
+    "bollinger_width_20": 19,
+    "bollinger_percent_b_20": 19,
+    "volume_zscore_20": 19,
+    "volume_change_1": 1,
+    "volume_ratio_20": 19,
+    "forward_log_return_1": 1,
+    "target_direction": 1,
+    "target_return_above_cost_proxy": 1,
+    "forward_trade_gross_return": 4,
+    "forward_trade_net_return_proxy": 4,
+    "target_fixed_hold_net_proxy": 4
+  },
+  "first_complete_features": "2016-10-20 00:00:00",
+  "eligible_views": {
+    "target_direction": {
+      "eligible": 2502,
+      "first": "2016-10-20 00:00:00",
+      "last": "2026-10-29 00:00:00"
+    },
+    "target_return_above_cost_proxy": {
+      "eligible": 2502,
+      "first": "2016-10-20 00:00:00",
+      "last": "2026-10-29 00:00:00"
+    },
+    "target_fixed_hold_net_proxy": {
+      "eligible": 2499,
+      "first": "2016-10-20 00:00:00",
+      "last": "2026-10-26 00:00:00"
+    }
+  },
+  "target_stats": {
+    "target_direction": {
+      "positive": 1283,
+      "negative": 1418,
+      "missing": 1,
+      "positive_rate": 0.47500925583117365
+    },
+    "target_return_above_cost_proxy": {
+      "positive": 1039,
+      "negative": 1662,
+      "missing": 1,
+      "positive_rate": 0.3846723435764532
+    },
+    "target_fixed_hold_net_proxy": {
+      "positive": 1260,
+      "negative": 1438,
+      "missing": 4,
+      "positive_rate": 0.4670126019273536
+    }
+  },
+  "forward_stats": {
+    "forward_log_return_1": {
+      "mean": 0.000779161488053296,
+      "median": 0.0,
+      "std": 0.020484684938158654,
+      "min": -0.07280119091040219,
+      "max": 0.06751272978098741
+    },
+    "forward_trade_gross_return": {
+      "mean": 0.0030331160752617684,
+      "median": 0.0025574806581670773,
+      "std": 0.03703419224466421,
+      "min": -0.17404898384575296,
+      "max": 0.23557692307692313
+    },
+    "forward_trade_net_return_proxy": {
+      "mean": -0.0019715349330515137,
+      "median": -0.002444797159040557,
+      "std": 0.03684940950460419,
+      "min": -0.17817008066655182,
+      "max": 0.22941199073837648
+    }
+  }
+}

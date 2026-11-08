@@ -1,5 +1,6 @@
 # --- Data Ingestion & Storage ---
 yfinance
+vnstock
 pandas
 numpy
 pyarrow

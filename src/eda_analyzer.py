@@ -43,7 +43,7 @@ def load_raw_data(parquet_path: str) -> pd.DataFrame:
     """Đọc file dữ liệu thô đã làm sạch từ thư mục data/raw/."""
     path = Path(parquet_path)
     if not path.exists():
-        raise FileNotFoundError(f"Không tìm thấy file dữ liệu tại {path.resolve()}. Hãy chạy data_loader.py trước!")
+        raise FileNotFoundError(f"Không tìm thấy file dữ liệu tại {path.resolve()}. Hãy kiểm tra cấu hình dữ liệu!")
     logger.info(f"Đang đọc dữ liệu từ: {path}")
     df = pd.read_parquet(path)
     return df

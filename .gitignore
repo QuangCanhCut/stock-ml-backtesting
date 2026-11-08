@@ -8,6 +8,11 @@ __pycache__/
 *.pyc
 *.pyo
 
+# Pytest temporary files
+.pytest-tmp/
+.pytest-tmp-*/
+.pytest_cache/
+
 # VS Code
 .vscode/
 

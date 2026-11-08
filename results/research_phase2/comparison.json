@@ -1,0 +1,75 @@
+{
+  "raw_research_sha256": "75034e21d3b817e13d3d83b47719bd3c259883b7401aafe4a6e21a786122129a",
+  "research_gate": "PASS_WITH_LIMITATIONS",
+  "dataset_cu": {
+    "rows": 2639,
+    "columns": 37,
+    "first": "2016-01-04",
+    "last": "2026-10-30"
+  },
+  "dataset_research": {
+    "rows": 2702,
+    "columns": 37,
+    "features": 26,
+    "labels": 6,
+    "first": "2016-01-04",
+    "last": "2026-10-30",
+    "nan_features": {
+      "log_return": 1,
+      "return_lag_1": 2,
+      "return_lag_2": 3,
+      "return_lag_3": 4,
+      "return_lag_5": 6,
+      "return_lag_10": 11,
+      "return_lag_21": 22,
+      "sma_ratio_10": 9,
+      "sma_ratio_20": 19,
+      "sma_ratio_50": 49,
+      "sma_ratio_200": 199,
+      "ema_ratio_12": 11,
+      "ema_ratio_26": 25,
+      "macd_ratio": 25,
+      "momentum_5": 5,
+      "momentum_10": 10,
+      "momentum_21": 21,
+      "rsi_14": 14,
+      "volatility_21": 21,
+      "volatility_63": 63,
+      "atr_ratio_14": 13,
+      "bollinger_width_20": 19,
+      "bollinger_percent_b_20": 19,
+      "volume_zscore_20": 19,
+      "volume_change_1": 1,
+      "volume_ratio_20": 19
+    },
+    "nan_labels": {
+      "forward_log_return_1": 1,
+      "target_direction": 1,
+      "target_return_above_cost_proxy": 1,
+      "forward_trade_gross_return": 4,
+      "forward_trade_net_return_proxy": 4,
+      "target_fixed_hold_net_proxy": 4
+    }
+  },
+  "comparison": {
+    "rows_added": 63,
+    "rows_removed": 0,
+    "common_sessions": 2639
+  },
+  "checks": {
+    "chronological_unique": true,
+    "t_plus_1_matches_next_row": true,
+    "last_target_missing": true,
+    "feature_prefix_invariant": true,
+    "feature_name_leakage": false
+  },
+  "limitations": [
+    "Không phải dataset validated toàn diện",
+    "Calendar chính thức và 94 phiên đầu 2016 chưa xác minh độc lập",
+    "Corporate actions và điều chỉnh point-in-time chưa xác minh",
+    "Không dùng giá adjusted làm giá khớp lệnh",
+    "Hai ngày bị loại không có trong KBS/Raw nhưng chưa đối chiếu lịch HOSE chính thức; T+1 có thể không phải phiên kế tiếp nếu calendar thiếu",
+    "EDA mô tả dùng toàn bộ giai đoạn, gồm cả test; không được xem test là chưa từng quan sát trong EDA"
+  ],
+  "processed_sha256": "c764983413e04163934bdd6c14b0e2afaf8907807e236a8aece4eba7add573e2"
+}
