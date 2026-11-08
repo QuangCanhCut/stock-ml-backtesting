@@ -1,37 +1,70 @@
-# Python virtual environment
+
+# ==========================================
+# Python virtual environments
+# ==========================================
 .venv/
 venv/
 env/
 
-# Python cache
+# Python cache and build artifacts
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*.egg-info/
+build/
+dist/
 
-# Pytest temporary files
+# ==========================================
+# Testing and coverage
+# ==========================================
+.pytest_cache/
 .pytest-tmp/
 .pytest-tmp-*/
-.pytest_cache/
+tests/.tmp_pytest/
+.coverage
+htmlcov/
 
-# VS Code
+# ==========================================
+# IDE and notebooks
+# ==========================================
 .vscode/
-
-# Jupyter
+.idea/
 .ipynb_checkpoints/
 
-# Environment variables
+# ==========================================
+# Environment variables and secrets
+# ==========================================
 .env
 .env.*
+!.env.example
 
-# Model files
+# ==========================================
+# Trained models and checkpoints
+# ==========================================
 *.pkl
 *.joblib
 *.pt
 *.pth
+*.ckpt
+*.h5
 
-# Data outputs
-data/raw/*.csv
+# ==========================================
+# Financial datasets
+# ==========================================
+# Yahoo, KBS, VCI and generated datasets
+data/raw/
+data/processed/
 
-# OS files
+# Provider snapshots and detailed audit data
+results/data_audit/
+
+# ==========================================
+# Temporary files
+# ==========================================
+*.tmp
+*.log
+
+# ==========================================
+# Operating system files
+# ==========================================
 .DS_Store
 Thumbs.db
