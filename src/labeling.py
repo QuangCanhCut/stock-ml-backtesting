@@ -9,7 +9,6 @@ cần purge các nhãn có khoảng thông tin tương lai giao với giai đo�
 from collections.abc import Mapping
 from numbers import Integral, Real
 from typing import Any
-import warnings
 
 import numpy as np
 import pandas as pd
@@ -36,9 +35,24 @@ def _fraction(value: Any, name: str) -> float:
     return float(value)
 
 
-def _threshold(config: Mapping[str, Any]) -> float:
-    return _fraction(_section(config, "market_microstructure").get("round_trip_cost"),
-                     "market_microstructure.round_trip_cost")
+def transaction_costs(config: Mapping[str, Any]) -> tuple[float, float, float, float]:
+    """Đọc phí; slippage là tỷ lệ áp dụng cho mỗi chiều."""
+    costs = _section(config, "market_microstructure")
+    if "round_trip_cost" in costs:
+        raise ValueError("Không cấu hình round_trip_cost riêng; dùng các thành phần phí")
+    buy, sell, tax, slippage = (
+        _fraction(costs.get(name), name)
+        for name in ("commission_buy", "commission_sell", "tax_sell", "slippage")
+    )
+    if sell + tax >= 1:
+        raise ValueError("Tổng commission_sell và tax_sell phải nhỏ hơn 1")
+    return buy, sell, tax, slippage
+
+
+def round_trip_cost_proxy(config: Mapping[str, Any]) -> float:
+    """Tổng gần đúng, không phải chi phí chính xác theo công thức giao dịch."""
+    buy, sell, tax, slippage = transaction_costs(config)
+    return buy + sell + tax + 2 * slippage
 
 
 def _positive_label(values: pd.Series) -> pd.Series:
@@ -61,7 +75,7 @@ def add_return_threshold_proxy(df: pd.DataFrame, config: Mapping[str, Any]) -> p
     """
     data = validate_labeling_input(df)
     forward = np.log(data["close"].shift(-1) / data["close"])
-    target = _positive_label(forward - _threshold(config))
+    target = _positive_label(forward - round_trip_cost_proxy(config))
     return pd.DataFrame({"target_return_above_cost_proxy": target}, index=data.index)
 
 
@@ -77,21 +91,7 @@ def add_fixed_hold_trade_labels(df: pd.DataFrame, config: Mapping[str, Any]) -> 
     holding = labeling.get("fixed_holding_sessions")
     if isinstance(holding, bool) or not isinstance(holding, Integral) or holding < 1:
         raise ValueError("labeling.fixed_holding_sessions phải là số nguyên >= 1")
-    costs = _section(config, "market_microstructure")
-    buy = _fraction(costs.get("commission_buy"), "commission_buy")
-    sell = _fraction(costs.get("commission_sell"), "commission_sell")
-    tax = _fraction(costs.get("tax_sell"), "tax_sell")
-    slippage = _fraction(costs.get("slippage"), "slippage")
-    threshold = _threshold(config)
-    if sell + tax >= 1:
-        raise ValueError("Tổng commission_sell và tax_sell phải nhỏ hơn 1")
-    total = buy + sell + tax + 2 * slippage
-    if not np.isclose(total, threshold, rtol=0, atol=1e-12):
-        warnings.warn(
-            f"round_trip_cost proxy {threshold:.6f} khác tổng phí thành phần "
-            f"hai chiều {total:.6f}; nhãn giao dịch dùng từng thành phần.",
-            UserWarning, stacklevel=2,
-        )
+    buy, sell, tax, slippage = transaction_costs(config)
     entry = data["open"].shift(-1)
     exit_price = data["open"].shift(-(1 + int(holding)))
     gross = exit_price / entry - 1

@@ -24,7 +24,7 @@ def config():
             "eda": {"rolling_vol_windows": [2, 3]},
             "market_microstructure": {"trading_days_per_year": 252, "commission_buy": .001,
                                       "commission_sell": .001, "tax_sell": .001,
-                                      "slippage": .001, "round_trip_cost": .005},
+                                      "slippage": .001},
             "labeling": {"fixed_holding_sessions": 3}}
 
 
