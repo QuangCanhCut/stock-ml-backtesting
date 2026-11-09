@@ -1,6 +1,5 @@
 """Kiểm tra công thức, phí và căn chỉnh thời gian của các nhãn."""
 from copy import deepcopy
-import warnings
 
 import numpy as np
 import pandas as pd
@@ -17,8 +16,7 @@ def cfg():
     return {"labeling": {"fixed_holding_sessions": 3},
             "market_microstructure": {"commission_buy": 0.01,
                                       "commission_sell": 0.02,
-                                      "tax_sell": 0.03, "slippage": 0.04,
-                                      "round_trip_cost": 0.14}}
+                                      "tax_sell": 0.03, "slippage": 0.04}}
 
 
 @pytest.fixture
@@ -42,15 +40,31 @@ def test_direction_alignment_dtype_and_missing(bars):
 
 def test_threshold_strict_and_configured(bars, cfg):
     # Ngưỡng bằng đúng log return được tính độc lập; phép so sánh là >.
-    cfg["market_microstructure"]["round_trip_cost"] = np.log(1.1)
+    cfg["market_microstructure"].update(commission_buy=np.log(1.1), commission_sell=0., tax_sell=0., slippage=0.)
     labels = add_return_threshold_proxy(bars, cfg)
     assert labels.iloc[0, 0] == 0
     assert labels.iloc[3, 0] == 1
     assert labels.iloc[1, 0] == 0
     assert pd.isna(labels.iloc[-1, 0])
     assert str(labels.dtypes.iloc[0]) == "Int8"
-    cfg["market_microstructure"]["round_trip_cost"] = 0.2
+    cfg["market_microstructure"]["commission_buy"] = 0.2
     assert add_return_threshold_proxy(bars, cfg).iloc[3, 0] == 0
+
+
+def test_eda_uses_same_cost_threshold(bars, cfg):
+    from src.eda_analyzer import compute_quant_features
+
+    cfg["market_microstructure"].update(commission_buy=.01, commission_sell=.02,
+                                          tax_sell=.01, slippage=.005)
+    eda = compute_quant_features(bars, cfg)
+    labels = add_return_threshold_proxy(bars, cfg)
+    pd.testing.assert_series_equal(eda["target_net_profit"],
+                                   labels.loc[eda.index, "target_return_above_cost_proxy"].astype(int),
+                                   check_names=False)
+    cfg["market_microstructure"]["commission_buy"] = .2
+    changed = compute_quant_features(bars, cfg)
+    assert changed.loc[bars.index[3], "target_net_profit"] == 0
+    assert eda.loc[bars.index[3], "target_net_profit"] == 1
 
 
 def test_economic_formula_and_signal_alignment(bars, cfg):
@@ -75,7 +89,6 @@ def test_individual_costs(bars, cfg, fee):
     for name in ("commission_buy", "commission_sell", "tax_sell", "slippage"):
         costs[name] = 0.0
     costs[fee] = .1
-    costs["round_trip_cost"] = .2 if fee == "slippage" else .1
     net = add_fixed_hold_trade_labels(bars, cfg).forward_trade_net_return_proxy.iloc[0]
     gross_ratio = 150 / 110
     multiplier = {"commission_buy": 1 / 1.1, "commission_sell": .9,
@@ -95,10 +108,10 @@ def test_zero_cost_equal_gross_and_zero_class(bars, cfg):
     assert (out.target_fixed_hold_net_proxy.dropna() == 0).all()
 
 
-def test_cost_mismatch_warning(bars, cfg):
+def test_rejects_separate_round_trip_cost(bars, cfg):
     cfg["market_microstructure"]["round_trip_cost"] = .1
-    with pytest.warns(UserWarning, match="round_trip_cost"):
-        add_fixed_hold_trade_labels(bars, cfg)
+    with pytest.raises(ValueError, match="round_trip_cost"):
+        build_labels(bars, cfg)
 
 
 @pytest.mark.parametrize("length", [1, 2, 4])
@@ -136,9 +149,7 @@ def test_invalid_input(bars, cfg, case):
     ("market_microstructure", "commission_sell", 1.0),
     ("market_microstructure", "tax_sell", np.nan),
     ("market_microstructure", "slippage", np.inf),
-    ("market_microstructure", "slippage", "0.1"),
-    ("market_microstructure", "round_trip_cost", None),
-    ("market_microstructure", "round_trip_cost", True)])
+    ("market_microstructure", "slippage", "0.1")])
 def test_invalid_config(bars, cfg, section, key, value):
     cfg[section][key] = value
     with pytest.raises(ValueError): build_labels(bars, cfg)

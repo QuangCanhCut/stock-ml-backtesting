@@ -19,6 +19,8 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.stats.diagnostic import acorr_ljungbox
 from statsmodels.graphics.tsaplots import plot_acf
 
+from src.labeling import round_trip_cost_proxy
+
 # Cấu hình logging hệ thống
 logging.basicConfig(
     level=logging.INFO,
@@ -49,7 +51,7 @@ def load_raw_data(parquet_path: str) -> pd.DataFrame:
     return df
 
 
-def compute_quant_features(df: pd.DataFrame) -> pd.DataFrame:
+def compute_quant_features(df: pd.DataFrame, config: Dict[str, Any]) -> pd.DataFrame:
     """Tính toán các chỉ số lợi suất (Returns) và biến mục tiêu (Targets) chuẩn Quant."""
     df = df.copy()
     
@@ -61,8 +63,8 @@ def compute_quant_features(df: pd.DataFrame) -> pd.DataFrame:
     df["next_log_return"] = df["log_return"].shift(-1)
     df["target_direction"] = (df["next_log_return"] > 0).astype(int)
     
-    # 3. Biến mục tiêu vượt chi phí giao dịch (2 chiều ~0.45% theo config) phục vụ RQ2
-    round_trip_cost = 0.0045 
+    # Ngưỡng heuristic từ các thành phần phí, không phải PnL giao dịch.
+    round_trip_cost = round_trip_cost_proxy(config)
     df["target_net_profit"] = (df["next_log_return"] > round_trip_cost).astype(int)
     
     # Loại bỏ dòng NaN do phép shift/pct_change
@@ -195,7 +197,7 @@ if __name__ == "__main__":
     df_raw = load_raw_data(raw_path)
     
     # 3. Tính toán features Quant cơ bản
-    df_features = compute_quant_features(df_raw)
+    df_features = compute_quant_features(df_raw, config)
     
     # 4. Chạy kiểm định thống kê EDA
     report_str = run_statistical_tests(df_features, config)

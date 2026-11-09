@@ -94,7 +94,7 @@ def run(root):
         train_stats.to_csv(folder / "feature_statistics_train.csv")
         correlations.to_csv(folder / "feature_correlations_train.csv")
         ic.to_csv(folder / "feature_ic_train.csv")
-        eda = compute_quant_features(raw)
+        eda = compute_quant_features(raw, cfg)
         eda_report = run_statistical_tests(eda, cfg)
         (folder / "eda_report.txt").write_text(eda_report, encoding="utf-8")
         generate_and_save_plots(eda, str(folder / "figures"))

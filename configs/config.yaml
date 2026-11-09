@@ -24,12 +24,11 @@ market_microstructure:
   limit_hit_threshold: 0.067   # Ngưỡng nhận diện phiên kịch trần/sàn (>= 6.7%)
   settlement_cycle: 2.5        # Chu kỳ thanh toán T+2.5 tại Việt Nam
   
-  # Chi phí giao dịch thực tế tại Việt Nam (Dùng cho RQ2 & Labeling)
+  # Giả định chi phí; ngưỡng gần đúng = phí mua + phí bán + thuế + 2 × slippage
   commission_buy: 0.0015       # 0.15% phí môi giới chiều mua
   commission_sell: 0.0015      # 0.15% phí môi giới chiều bán
   tax_sell: 0.0010             # 0.10% thuế TNCN khi bán chứng khoán
   slippage: 0.0005             # 0.05% trượt giá ước tính mỗi chiều (HPG thanh khoản cao)
-  round_trip_cost: 0.0045      # Tổng phí 1 vòng Mua -> Bán (~0.45% hay 45 bps)
 
 eda:
   acf_lags: 30
