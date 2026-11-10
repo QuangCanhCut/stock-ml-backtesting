@@ -71,5 +71,12 @@
     "Hai ngày bị loại không có trong KBS/Raw nhưng chưa đối chiếu lịch HOSE chính thức; T+1 có thể không phải phiên kế tiếp nếu calendar thiếu",
     "EDA mô tả dùng toàn bộ giai đoạn, gồm cả test; không được xem test là chưa từng quan sát trong EDA"
   ],
-  "processed_sha256": "c764983413e04163934bdd6c14b0e2afaf8907807e236a8aece4eba7add573e2"
+  "processed_sha256": "4cc485687c1bc13aae7f3989be77a0d1e4da8abb1f2e3da6a470ed3e6c5e8f4e",
+  "label_update": {
+    "column": "target_return_above_cost_proxy",
+    "previous_processed_sha256": "c764983413e04163934bdd6c14b0e2afaf8907807e236a8aece4eba7add573e2",
+    "round_trip_cost_proxy": 0.005,
+    "changed_rows": 35,
+    "note": "Chỉ tính lại cột nhãn theo cấu hình phí; mọi cột khác giữ nguyên."
+  }
 }

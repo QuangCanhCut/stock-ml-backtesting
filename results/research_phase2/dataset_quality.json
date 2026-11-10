@@ -63,10 +63,10 @@
       "positive_rate": 0.47500925583117365
     },
     "target_return_above_cost_proxy": {
-      "positive": 1039,
-      "negative": 1662,
+      "positive": 1004,
+      "negative": 1697,
       "missing": 1,
-      "positive_rate": 0.3846723435764532
+      "positive_rate": 0.37171417993335804
     },
     "target_fixed_hold_net_proxy": {
       "positive": 1260,

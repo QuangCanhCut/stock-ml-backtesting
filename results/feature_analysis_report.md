@@ -1,6 +1,6 @@
 # Phase 2.4 — Phân tích feature HPG Research
 
-Nguồn: [notebook 02](../notebooks/02_feature_engineering_labeling.ipynb), chạy trên `data/processed/HPG_features_labeled_research.parquet`, SHA-256 `c764983413e04163934bdd6c14b0e2afaf8907807e236a8aece4eba7add573e2`. Dữ liệu VCI Research có gate `PASS_WITH_LIMITATIONS`, không phải dữ liệu validated toàn diện. Số liệu và hình dưới đây được tạo từ lần chạy này, không phải dataset cũ.
+Nguồn: [notebook 02](../notebooks/02_feature_engineering_labeling.ipynb), chạy trên `data/processed/HPG_features_labeled_research.parquet`, SHA-256 `c764983413e04163934bdd6c14b0e2afaf8907807e236a8aece4eba7add573e2` tại lúc chạy notebook; sau đó chỉ cập nhật nhãn không dùng trong phân tích, dataset hiện có SHA-256 `4cc485687c1bc13aae7f3989be77a0d1e4da8abb1f2e3da6a470ed3e6c5e8f4e`. Dữ liệu VCI Research có gate `PASS_WITH_LIMITATIONS`, không phải dữ liệu validated toàn diện. Số liệu và hình dưới đây được tạo từ lần chạy này, không phải dataset cũ.
 
 ## 1. Phạm vi và phương pháp
 
@@ -16,7 +16,7 @@ Train 2016-01-04–2020-12-31 có 1251 phiên; validation 2021-01-04–2021-12-3
 
 RQ1 dùng return Close(t) đến Close(t+1); RQ2 là proxy mua Open(t+1), bán Open(t+4), sau phí. Purge theo thời điểm kết thúc nhãn; không áp dụng embargo riêng, chưa thực hiện walk-forward. Chỉ phân tích target train/validation; EDA mô tả trước đây đã dùng cả test, nên test không hoàn toàn kín.
 
-Dataset lưu trước thay đổi cấu hình phí: `target_return_above_cost_proxy` vẫn dùng ngưỡng 0,45% cũ và không được phân tích trong notebook. RQ2 dùng các thành phần phí hiện tại (tổng gần đúng 0,50%). Giá adjusted không được coi là giá thực thi.
+Sau lần chạy notebook, cột `target_return_above_cost_proxy` đã được tính lại theo ngưỡng gần đúng 0,50% từ cấu hình phí hiện tại. Notebook không phân tích cột này; các feature, nhãn RQ1 và RQ2 dùng trong báo cáo không thay đổi. RQ2 dùng các thành phần phí hiện tại. Giá adjusted không được coi là giá thực thi.
 
 ## 2. Chất lượng và phân phối
 
