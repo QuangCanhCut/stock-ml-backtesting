@@ -14,6 +14,7 @@ seaborn
 
 # --- Machine Learning & Deep Learning (Day 3 - Finpros JD Requirements) ---
 scikit-learn
+joblib
 lightgbm
 xgboost
 torch

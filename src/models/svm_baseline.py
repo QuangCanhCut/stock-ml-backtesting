@@ -1,17 +1,27 @@
 """Thực nghiệm Dummy và SVM trên các development folds đã được xác minh."""
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
+import hashlib
+import json
+from pathlib import Path
+import platform
+from typing import Any
 
+import joblib
 import numpy as np
 import pandas as pd
+import pyarrow
 from sklearn.dummy import DummyClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
+import sklearn
 
-from src.models.data import ModelingView
+from src.dataset_builder import expected_feature_columns, load_project_config
+from src.models.data import RESEARCH_PATH, RQ_TARGETS, ModelingView, load_research_dataset, make_modeling_view
 from src.models.evaluation import binary_metrics
-from src.models.modeling_safety import require_development_split
+from src.models.modeling_safety import MANIFEST_PATH, get_full_development_train_indices, require_development_split
 from src.models.temporal_split import TEST_START_YEAR, TemporalSplit
 
 
@@ -200,3 +210,153 @@ def select_configurations(comparison: pd.DataFrame) -> dict[str, dict]:
                         "std_balanced_accuracy": float(winner.std_balanced_accuracy),
                         "delta_mean_balanced_accuracy_vs_dummy": float(winner.delta_mean_balanced_accuracy_vs_dummy)}
     return selected
+
+
+def fit_and_export_final_development_models(
+    root: Path,
+    output_dir: Path | None = None,
+    selected_configs: dict[str, dict] | None = None,
+) -> dict[str, Any]:
+    """Huấn luyện và lưu bản model SVM cuối của giai đoạn phát triển (2016–2021).
+
+    Chỉ fit trên các mẫu hợp lệ 2016–2021 (1.297 mẫu sau purging và gap 5 phiên),
+    tuyệt đối không huấn luyện, dự đoán hoặc chạm vào vùng Reserved Test 2022–2026.
+
+    Args:
+        root: Thư mục gốc repository.
+        output_dir: Thư mục xuất (mặc định 'models/svm').
+        selected_configs: Cấu hình thắng cuộc cho từng RQ.
+
+    Returns:
+        Metadata đầy đủ của các mô hình phát triển cuối cùng đã lưu.
+    """
+    root = Path(root).resolve()
+    target_dir = Path(output_dir).resolve() if output_dir else root / "models/svm"
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    config_path = root / "configs/config.yaml"
+    config = load_project_config(config_path)
+    dataset = load_research_dataset(root, config)
+    manifest_path = root / MANIFEST_PATH
+
+    if selected_configs is None:
+        svm_selected_file = root / "results/modeling/svm/selected_configs.json"
+        if svm_selected_file.is_file():
+            stored = json.loads(svm_selected_file.read_text(encoding="utf-8"))
+            selected_configs = stored.get("selected", {})
+        else:
+            selected_configs = {
+                "RQ1": {"config_id": "linear_c0.1_balanced"},
+                "RQ2": {"config_id": "linear_c1_balanced"},
+            }
+
+    config_lookup = {cfg.config_id: cfg for cfg in MODEL_CONFIGS}
+    models_metadata: dict[str, Any] = {}
+    weight_rows: list[dict[str, Any]] = []
+
+    for rq in ("RQ1", "RQ2"):
+        if rq not in selected_configs:
+            raise ValueError(f"Thiếu cấu hình SVM được chọn cho {rq}")
+        cfg_id = selected_configs[rq]["config_id"]
+        if cfg_id not in config_lookup:
+            raise ValueError(f"Không tìm thấy cấu hình {cfg_id} trong MODEL_CONFIGS")
+        model_config = config_lookup[cfg_id]
+
+        train_indices = get_full_development_train_indices(root, rq)
+        view = make_modeling_view(dataset, config, rq)
+
+        X_train = view.X.iloc[list(train_indices)]
+        y_train = view.y.iloc[list(train_indices)]
+        metadata_train = view.metadata.iloc[list(train_indices)]
+
+        if (X_train.index.max().year >= TEST_START_YEAR
+                or metadata_train.label_end_date.max().year >= TEST_START_YEAR):
+            raise ValueError(f"{rq}: Dữ liệu train phát triển vượt ranh giới năm Test")
+        if set(y_train.unique()) != {0, 1}:
+            raise ValueError(f"{rq}: Tập train phát triển cuối phải có đủ 2 lớp")
+
+        estimator = make_estimator(model_config)
+        estimator.fit(X_train, y_train.astype(int))
+
+        model_filename = f"{rq.lower()}_svm_final_dev_2016_2021.joblib"
+        model_path = target_dir / model_filename
+        joblib.dump(estimator, model_path)
+        model_sha256 = hashlib.sha256(model_path.read_bytes()).hexdigest()
+
+        scaler: StandardScaler = estimator.named_steps["scaler"]
+        classifier: SVC = estimator.named_steps["classifier"]
+
+        scaler_mean = {name: float(m) for name, m in zip(view.X.columns, scaler.mean_)}
+        scaler_scale = {name: float(s) for name, s in zip(view.X.columns, scaler.scale_)}
+
+        has_coef = hasattr(classifier, "coef_")
+        coef_dict = ({name: float(c) for name, c in zip(view.X.columns, classifier.coef_[0])}
+                     if has_coef else None)
+        intercept = float(classifier.intercept_[0]) if hasattr(classifier, "intercept_") else None
+        n_support = [int(n) for n in classifier.n_support_] if hasattr(classifier, "n_support_") else None
+
+        if has_coef:
+            abs_coefs = np.abs(classifier.coef_[0])
+            ranks = np.argsort(np.argsort(-abs_coefs)) + 1
+            for name, mean_val, scale_val, coef_val, rank_val in zip(
+                view.X.columns, scaler.mean_, scaler.scale_, classifier.coef_[0], ranks
+            ):
+                weight_rows.append({
+                    "rq": rq,
+                    "feature_name": name,
+                    "scaler_mean": float(mean_val),
+                    "scaler_scale": float(scale_val),
+                    "coef": float(coef_val),
+                    "abs_coef_rank": int(rank_val),
+                })
+
+        models_metadata[rq] = {
+            "rq": rq,
+            "config_id": model_config.config_id,
+            "model_name": model_config.model_name,
+            "C": model_config.C,
+            "gamma": model_config.gamma,
+            "class_weight": model_config.class_weight,
+            "train_samples": len(train_indices),
+            "train_start_date": str(X_train.index[0].date()),
+            "train_end_date": str(X_train.index[-1].date()),
+            "max_label_end_date": str(metadata_train.label_end_date.max().date()),
+            "feature_schema": list(view.X.columns),
+            "scaler_mean": scaler_mean,
+            "scaler_scale": scaler_scale,
+            "coef": coef_dict,
+            "intercept": intercept,
+            "n_support": n_support,
+            "model_file": model_filename,
+            "model_sha256": model_sha256,
+        }
+
+    full_metadata = {
+        "status": "COMPLETED_WITH_LIMITATIONS",
+        "description": "Bản model SVM cuối của giai đoạn phát triển (2016–2021) trước ranh giới Test 2022.",
+        "execution_timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "dataset_path": RESEARCH_PATH.as_posix(),
+        "dataset_sha256": hashlib.sha256((root / RESEARCH_PATH).read_bytes()).hexdigest(),
+        "config_sha256": hashlib.sha256(config_path.read_bytes()).hexdigest(),
+        "split_manifest_sha256": (hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+                                  if manifest_path.is_file() else None),
+        "versions": {
+            "python": platform.python_version(),
+            "scikit_learn": sklearn.__version__,
+            "joblib": joblib.__version__,
+            "pandas": pd.__version__,
+            "numpy": np.__version__,
+            "pyarrow": pyarrow.__version__,
+        },
+        "models": models_metadata,
+    }
+
+    (target_dir / "svm_final_dev_metadata.json").write_text(
+        json.dumps(full_metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
+    if weight_rows:
+        weights_df = pd.DataFrame(weight_rows)
+        weights_df.to_csv(target_dir / "svm_final_dev_feature_weights.csv", index=False, encoding="utf-8-sig")
+
+    return full_metadata

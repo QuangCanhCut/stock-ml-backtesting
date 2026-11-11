@@ -68,6 +68,33 @@ def get_final_evaluation_split(
     return matches[0]
 
 
+def get_full_development_train_indices(root: Path, rq: str) -> tuple[int, ...]:
+    """Trả các chỉ số vị trí train của toàn bộ giai đoạn phát triển hợp lệ (2016–2021).
+
+    Hàm chỉ trả train_indices của fold Reserved Test đã được purge và cách ly
+    bằng pre-validation gap 5 phiên trước năm 2022; tuyệt đối không trả về
+    hoặc chạm vào validation_indices của Reserved Test (2022–2026).
+
+    Args:
+        root: Thư mục gốc repository chứa dataset, config và manifest.
+        rq: RQ1 hoặc RQ2.
+
+    Returns:
+        Tuple chỉ số vị trí train trong ModelingView của cùng RQ (1.297 mẫu).
+
+    Raises:
+        ValueError: Khi manifest không hợp lệ hoặc ranh giới train chạm vùng Test.
+    """
+    splits = [split for split in _load_verified_splits(root, rq)
+              if split.role == "reserved_test"]
+    if len(splits) != 1:
+        raise ValueError(f"{rq}: manifest phải có đúng một fold Reserved Test")
+    target_split = splits[0]
+    if target_split.train_end_date.year >= TEST_START_YEAR:
+        raise ValueError("Chỉ số train giai đoạn phát triển vượt ranh giới năm Test")
+    return tuple(target_split.train_indices)
+
+
 def _validate_split_manifest(
     manifest: dict[str, Any], dataset: pd.DataFrame, config: dict,
     dataset_sha256: str, config_sha256: str, rq: str,
