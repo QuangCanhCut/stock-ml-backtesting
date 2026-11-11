@@ -1,0 +1,9 @@
+﻿rq,fold_name,role,train_start,train_end,validation_start,validation_end,evaluation_boundary,train_samples,validation_samples,purged_samples,gap_samples,overlap_exclusions,total_train_exclusions,boundary_exclusions,train_class_counts,validation_class_counts,train_one_class,validation_one_class,status
+RQ1,dev_1,development,2016-10-20,2018-12-21,2019-01-02,2019-12-30,2019-01-02,545,249,1,5,1,5,1,"{'0': 280, '1': 265}","{'0': 141, '1': 108}",False,False,PASS
+RQ1,dev_2,development,2016-10-20,2019-12-24,2020-01-02,2020-12-30,2020-01-02,795,251,1,5,1,5,1,"{'0': 423, '1': 372}","{'0': 107, '1': 144}",False,False,PASS
+RQ1,dev_3,development,2016-10-20,2020-12-24,2021-01-04,2021-12-30,2021-01-04,1047,249,1,5,1,5,1,"{'0': 531, '1': 516}","{'0': 118, '1': 131}",False,False,PASS
+RQ1,reserved_test,reserved_test,2016-10-20,2021-12-24,2022-01-04,2026-10-29,2022-01-04,1297,1200,1,5,1,5,0,"{'0': 647, '1': 650}",,False,,PASS
+RQ2,dev_1,development,2016-10-20,2018-12-21,2019-01-02,2019-12-25,2019-01-02,545,246,4,5,4,5,4,"{'0': 281, '1': 264}","{'0': 145, '1': 101}",False,False,PASS
+RQ2,dev_2,development,2016-10-20,2019-12-24,2020-01-02,2020-12-25,2020-01-02,795,248,4,5,4,5,4,"{'0': 429, '1': 366}","{'0': 112, '1': 136}",False,False,PASS
+RQ2,dev_3,development,2016-10-20,2020-12-24,2021-01-04,2021-12-27,2021-01-04,1047,246,4,5,4,5,4,"{'0': 540, '1': 507}","{'0': 110, '1': 136}",False,False,PASS
+RQ2,reserved_test,reserved_test,2016-10-20,2021-12-24,2022-01-04,2026-10-26,2022-01-04,1297,1197,4,5,4,5,0,"{'0': 650, '1': 647}",,False,,PASS
