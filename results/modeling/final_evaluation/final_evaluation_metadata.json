@@ -1,0 +1,35 @@
+{
+  "status": "COMPLETED_WITH_LIMITATIONS",
+  "description": "Kết quả đánh giá tổng hợp Phase 3 và mở khóa Reserved Test (2022–2026).",
+  "execution_timestamp_utc": "2026-11-11T08:43:19.641888+00:00",
+  "dataset_path": "data/processed/HPG_features_labeled_research.parquet",
+  "dataset_sha256": "4cc485687c1bc13aae7f3989be77a0d1e4da8abb1f2e3da6a470ed3e6c5e8f4e",
+  "config_sha256": "03dc301d0be4a6d31f94589fb34c1d8a026c01dcb49d218091899fa8d436f6b3",
+  "split_manifest_sha256": "f35a62524648488d84e52f7579a72e40e6d1b2c595814cb20f02535d3ecd5b42",
+  "git_commit": "03ea8bca6c7d3b9f0c8bd59822b2e90c7d0b44eb",
+  "versions": {
+    "python": "3.13.2",
+    "numpy": "2.5.4",
+    "pandas": "3.1.0"
+  },
+  "platt_calibrator_params": {
+    "RQ1": {
+      "coef": 0.17935883251711676,
+      "intercept": 0.03964633334271478
+    },
+    "RQ2": {
+      "coef": 0.06106098197768737,
+      "intercept": 0.013541990997091559
+    }
+  },
+  "generated_figures": [
+    "01_dev_vs_test_balanced_accuracy.png",
+    "02_yearly_regime_performance.png",
+    "03_model_score_distributions.png"
+  ],
+  "test_result": {
+    "command": ".venv\\Scripts\\python.exe -m pytest tests/unit tests/integration -q --tb=short",
+    "passed": 220,
+    "failed": 0
+  }
+}
