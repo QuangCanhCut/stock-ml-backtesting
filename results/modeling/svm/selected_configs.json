@@ -1,0 +1,165 @@
+{
+  "status": "COMPLETED_WITH_LIMITATIONS",
+  "execution_timestamp_utc": "2026-11-10T17:29:50.758987+00:00",
+  "dataset_path": "data/processed/HPG_features_labeled_research.parquet",
+  "dataset_sha256": "4cc485687c1bc13aae7f3989be77a0d1e4da8abb1f2e3da6a470ed3e6c5e8f4e",
+  "config_sha256": "03dc301d0be4a6d31f94589fb34c1d8a026c01dcb49d218091899fa8d436f6b3",
+  "split_manifest_sha256": "f35a62524648488d84e52f7579a72e40e6d1b2c595814cb20f02535d3ecd5b42",
+  "feature_schema": [
+    "log_return",
+    "return_lag_1",
+    "return_lag_2",
+    "return_lag_3",
+    "return_lag_5",
+    "return_lag_10",
+    "return_lag_21",
+    "sma_ratio_10",
+    "sma_ratio_20",
+    "sma_ratio_50",
+    "sma_ratio_200",
+    "ema_ratio_12",
+    "ema_ratio_26",
+    "macd_ratio",
+    "momentum_5",
+    "momentum_10",
+    "momentum_21",
+    "rsi_14",
+    "volatility_21",
+    "volatility_63",
+    "atr_ratio_14",
+    "bollinger_width_20",
+    "bollinger_percent_b_20",
+    "volume_zscore_20",
+    "volume_change_1",
+    "volume_ratio_20"
+  ],
+  "git_commit": "d907bac88710b0a20274569054551459f274f280",
+  "versions": {
+    "python": "3.13.2",
+    "scikit_learn": "1.9.1",
+    "pandas": "3.1.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.1"
+  },
+  "development_folds": [
+    "dev_1",
+    "dev_2",
+    "dev_3"
+  ],
+  "random_seed": null,
+  "model_configurations": [
+    {
+      "config_id": "dummy_prior",
+      "model_name": "dummy",
+      "C": null,
+      "class_weight": null,
+      "gamma": "scale"
+    },
+    {
+      "config_id": "linear_c0.1_none",
+      "model_name": "linear",
+      "C": 0.1,
+      "class_weight": null,
+      "gamma": "scale"
+    },
+    {
+      "config_id": "linear_c0.1_balanced",
+      "model_name": "linear",
+      "C": 0.1,
+      "class_weight": "balanced",
+      "gamma": "scale"
+    },
+    {
+      "config_id": "linear_c1_none",
+      "model_name": "linear",
+      "C": 1.0,
+      "class_weight": null,
+      "gamma": "scale"
+    },
+    {
+      "config_id": "linear_c1_balanced",
+      "model_name": "linear",
+      "C": 1.0,
+      "class_weight": "balanced",
+      "gamma": "scale"
+    },
+    {
+      "config_id": "linear_c10_none",
+      "model_name": "linear",
+      "C": 10.0,
+      "class_weight": null,
+      "gamma": "scale"
+    },
+    {
+      "config_id": "linear_c10_balanced",
+      "model_name": "linear",
+      "C": 10.0,
+      "class_weight": "balanced",
+      "gamma": "scale"
+    },
+    {
+      "config_id": "rbf_c0.1_none",
+      "model_name": "rbf",
+      "C": 0.1,
+      "class_weight": null,
+      "gamma": "scale"
+    },
+    {
+      "config_id": "rbf_c0.1_balanced",
+      "model_name": "rbf",
+      "C": 0.1,
+      "class_weight": "balanced",
+      "gamma": "scale"
+    },
+    {
+      "config_id": "rbf_c1_none",
+      "model_name": "rbf",
+      "C": 1.0,
+      "class_weight": null,
+      "gamma": "scale"
+    },
+    {
+      "config_id": "rbf_c1_balanced",
+      "model_name": "rbf",
+      "C": 1.0,
+      "class_weight": "balanced",
+      "gamma": "scale"
+    },
+    {
+      "config_id": "rbf_c10_none",
+      "model_name": "rbf",
+      "C": 10.0,
+      "class_weight": null,
+      "gamma": "scale"
+    },
+    {
+      "config_id": "rbf_c10_balanced",
+      "model_name": "rbf",
+      "C": 10.0,
+      "class_weight": "balanced",
+      "gamma": "scale"
+    }
+  ],
+  "model_selection_rule": "Mean Balanced Accuracy cao nhất; nếu bằng nhau chọn độ lệch chuẩn nhỏ hơn, sau đó Linear trước RBF và thứ tự cấu hình đã công bố.",
+  "selected": {
+    "RQ1": {
+      "config_id": "linear_c0.1_balanced",
+      "model_name": "linear",
+      "mean_balanced_accuracy": 0.5259772109249442,
+      "std_balanced_accuracy": 0.007784805937726789,
+      "delta_mean_balanced_accuracy_vs_dummy": 0.025977210924944205
+    },
+    "RQ2": {
+      "config_id": "linear_c1_balanced",
+      "model_name": "linear",
+      "mean_balanced_accuracy": 0.5272492154315404,
+      "std_balanced_accuracy": 0.022913401883577055,
+      "delta_mean_balanced_accuracy_vs_dummy": 0.027249215431540352
+    }
+  },
+  "test_result": {
+    "command": ".venv\\Scripts\\python.exe -m pytest tests/unit tests/integration -q --tb=short",
+    "passed": 191,
+    "failed": 0
+  }
+}

@@ -108,7 +108,11 @@ def export_research(root, snapshot_dir=None, expected_sessions=2702):
         with sidecar.open("x", encoding="utf-8") as stream:
             created_report = True
             json.dump(report, stream, ensure_ascii=False, indent=2)
-        os.link(tmp, target)
+        try:
+            os.link(tmp, target)
+        except (PermissionError, OSError):
+            os.replace(tmp, target)
+            tmp = None
     except Exception:
         if created_report:
             sidecar.unlink(missing_ok=True)

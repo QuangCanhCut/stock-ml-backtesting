@@ -54,7 +54,11 @@ def export_dataset(reports, metadata, root, evidence_path=None):
         with sidecar.open("x", encoding="utf-8") as stream:
             created_sidecar = True
             json.dump(provenance, stream, ensure_ascii=False, indent=2)
-        os.link(temp_path, target)
+        try:
+            os.link(temp_path, target)
+        except (PermissionError, OSError):
+            os.replace(temp_path, target)
+            temp_path = None
     except Exception:
         if created_sidecar:
             sidecar.unlink(missing_ok=True)

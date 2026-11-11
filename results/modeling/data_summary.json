@@ -1,0 +1,145 @@
+{
+  "dataset": {
+    "path": "data/processed/HPG_features_labeled_research.parquet",
+    "sha256": "4cc485687c1bc13aae7f3989be77a0d1e4da8abb1f2e3da6a470ed3e6c5e8f4e",
+    "rows": 2702,
+    "columns": 37,
+    "first": "2016-01-04",
+    "last": "2026-10-30",
+    "feature_count": 26,
+    "feature_names": [
+      "log_return",
+      "return_lag_1",
+      "return_lag_2",
+      "return_lag_3",
+      "return_lag_5",
+      "return_lag_10",
+      "return_lag_21",
+      "sma_ratio_10",
+      "sma_ratio_20",
+      "sma_ratio_50",
+      "sma_ratio_200",
+      "ema_ratio_12",
+      "ema_ratio_26",
+      "macd_ratio",
+      "momentum_5",
+      "momentum_10",
+      "momentum_21",
+      "rsi_14",
+      "volatility_21",
+      "volatility_63",
+      "atr_ratio_14",
+      "bollinger_width_20",
+      "bollinger_percent_b_20",
+      "volume_zscore_20",
+      "volume_change_1",
+      "volume_ratio_20"
+    ]
+  },
+  "environment": {
+    "python": "3.13.2",
+    "pandas": "3.1.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.1",
+    "git_commit": "d907bac88710b0a20274569054551459f274f280"
+  },
+  "checks": {
+    "schema": "PASS",
+    "feature_leakage": "PASS",
+    "temporal_alignment_rq1": "PASS",
+    "temporal_alignment_rq2": "PASS",
+    "feature_prefix_invariance": "PASS",
+    "view_eligibility": "PASS"
+  },
+  "feature_missing": {
+    "log_return": 1,
+    "return_lag_1": 2,
+    "return_lag_2": 3,
+    "return_lag_3": 4,
+    "return_lag_5": 6,
+    "return_lag_10": 11,
+    "return_lag_21": 22,
+    "sma_ratio_10": 9,
+    "sma_ratio_20": 19,
+    "sma_ratio_50": 49,
+    "sma_ratio_200": 199,
+    "ema_ratio_12": 11,
+    "ema_ratio_26": 25,
+    "macd_ratio": 25,
+    "momentum_5": 5,
+    "momentum_10": 10,
+    "momentum_21": 21,
+    "rsi_14": 14,
+    "volatility_21": 21,
+    "volatility_63": 63,
+    "atr_ratio_14": 13,
+    "bollinger_width_20": 19,
+    "bollinger_percent_b_20": 19,
+    "volume_zscore_20": 19,
+    "volume_change_1": 1,
+    "volume_ratio_20": 19
+  },
+  "target_missing": {
+    "target_direction": 1,
+    "target_fixed_hold_net_proxy": 4
+  },
+  "label_missing": {
+    "forward_log_return_1": 1,
+    "target_direction": 1,
+    "target_return_above_cost_proxy": 1,
+    "forward_trade_gross_return": 4,
+    "forward_trade_net_return_proxy": 4,
+    "target_fixed_hold_net_proxy": 4
+  },
+  "warmup_rows": 199,
+  "feature_incomplete_rows": 199,
+  "nonfinite_values": 0,
+  "outliers": {
+    "absolute_close_return_above_12pct": 0,
+    "volume_ratio_outside_0_1_to_10": 0
+  },
+  "cost_proxy_approximation": 0.005,
+  "views": {
+    "RQ1": {
+      "target": "target_direction",
+      "eligible": 2502,
+      "excluded": 200,
+      "excluded_missing_features": 199,
+      "excluded_missing_target_with_features": 1,
+      "class_counts": {
+        "0": 1320,
+        "1": 1182
+      },
+      "class_proportions": {
+        "0": 0.5275779376498801,
+        "1": 0.4724220623501199
+      },
+      "first": "2016-10-20",
+      "last": "2026-10-29"
+    },
+    "RQ2": {
+      "target": "target_fixed_hold_net_proxy",
+      "eligible": 2499,
+      "excluded": 203,
+      "excluded_missing_features": 199,
+      "excluded_missing_target_with_features": 4,
+      "class_counts": {
+        "0": 1347,
+        "1": 1152
+      },
+      "class_proportions": {
+        "0": 0.539015606242497,
+        "1": 0.460984393757503
+      },
+      "first": "2016-10-20",
+      "last": "2026-10-26"
+    }
+  },
+  "limitations": [
+    "Giá điều chỉnh và sự kiện doanh nghiệp chưa được xác minh tại từng thời điểm.",
+    "Lịch giao dịch chính thức, nhất là 94 phiên đầu năm 2016, chưa được đối chiếu độc lập.",
+    "Chưa chứng minh thời điểm công bố dữ liệu và khả năng giao dịch tại giá Open.",
+    "Chi phí và slippage chỉ là giả định; chưa phản ánh khớp lệnh thực tế."
+  ],
+  "status": "COMPLETED_WITH_LIMITATIONS"
+}
