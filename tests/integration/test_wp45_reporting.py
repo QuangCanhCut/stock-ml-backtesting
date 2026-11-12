@@ -103,3 +103,4 @@ def test_phase4_report_programmatic_consistency() -> None:
     for section_idx in range(1, 10):
         section_header = f"## {section_idx}."
         assert section_header in report_text, f"Thiếu mục {section_header} trong báo cáo!"
+
