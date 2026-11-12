@@ -1,0 +1,388 @@
+{
+  "status": "COMPLETED",
+  "execution_timestamp_utc": "2026-11-12T08:58:21.398624+00:00",
+  "dataset_path": "data/processed/HPG_features_labeled_research.parquet",
+  "dataset_sha256": "4cc485687c1bc13aae7f3989be77a0d1e4da8abb1f2e3da6a470ed3e6c5e8f4e",
+  "manifest_path": "results/modeling/splits/split_manifest.json",
+  "manifest_sha256": "f35a62524648488d84e52f7579a72e40e6d1b2c595814cb20f02535d3ecd5b42",
+  "rules": {
+    "exchange": "HOSE",
+    "initial_capital": 100000000.0,
+    "risk_free_rate": 0.045,
+    "trading_days_per_year": 252,
+    "daily_price_limit": 0.07,
+    "limit_hit_threshold": 0.067,
+    "settlement_cycle": 2.5,
+    "buy_cost_rate": 0.002,
+    "sell_cost_rate": 0.003,
+    "effective_round_trip_cost": 0.005
+  },
+  "input_test_predictions_rows": 19176,
+  "aligned_market_data": {
+    "total_calendar_sessions": 2702,
+    "test_start_date": "2022-01-04",
+    "test_end_date_rq1": "2026-10-29",
+    "test_end_date_rq2": "2026-10-26",
+    "rq1_sessions": 1200,
+    "rq2_sessions": 1197,
+    "missing_exec_open_count": 0
+  },
+  "dev_oof_seed_buffers": {
+    "RQ1": {
+      "dummy": 749,
+      "svm": 749,
+      "lightgbm": 749,
+      "lstm": 749,
+      "ensemble": 749
+    },
+    "RQ2": {
+      "dummy": 740,
+      "svm": 740,
+      "lightgbm": 740,
+      "lstm": 740,
+      "ensemble": 740
+    }
+  },
+  "output_signal_rows": 67116,
+  "diagnostics_summary": {
+    "total_series": 56,
+    "series_list": [
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "dummy",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "dummy",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "dummy",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "svm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "svm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "svm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "lightgbm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "lightgbm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "lightgbm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "lstm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "lstm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "lstm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "ensemble",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ1",
+        "model_name": "ensemble",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "dummy",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "dummy",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "dummy",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "svm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "svm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "svm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "lightgbm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "lightgbm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "lightgbm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "lstm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "lstm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "lstm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "ensemble",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "frozen_2016_2021",
+        "rq": "RQ2",
+        "model_name": "ensemble",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "dummy",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "dummy",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "dummy",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "svm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "svm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "svm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "lightgbm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "lightgbm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "lightgbm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "lstm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "lstm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "lstm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "ensemble",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ1",
+        "model_name": "ensemble",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "dummy",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "dummy",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "dummy",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "svm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "svm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "svm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "lightgbm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "lightgbm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "lightgbm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "lstm",
+        "signal_mode": "fixed_053_048"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "lstm",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "lstm",
+        "signal_mode": "quantile_q70_q40"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "ensemble",
+        "signal_mode": "quantile_q80_q30"
+      },
+      {
+        "protocol": "annual_expanding_retrain",
+        "rq": "RQ2",
+        "model_name": "ensemble",
+        "signal_mode": "quantile_q70_q40"
+      }
+    ]
+  }
+}
