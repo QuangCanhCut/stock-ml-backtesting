@@ -1,0 +1,17 @@
+strategy_id,scenario,removed_trades_count,remaining_trades,adjusted_final_nav_vnd,adjusted_total_return_pct,adjusted_cagr_pct,beats_buy_and_hold,beats_risk_free
+annual_expanding_retrain_RQ2_lstm_fixed_053_048_all_in_out,All_Trades,0,20,160179634,60.18,10.39,True,True
+annual_expanding_retrain_RQ2_lstm_fixed_053_048_all_in_out,Excl_Top_1_Best_Trade,1,19,139942793,39.94,7.31,True,True
+annual_expanding_retrain_RQ2_lstm_fixed_053_048_all_in_out,Excl_Top_2_Best_Trades,2,18,124692473,24.69,4.74,True,True
+annual_expanding_retrain_RQ2_lstm_fixed_053_048_all_in_out,Excl_Top_3_Best_Trades,3,17,109234745,9.23,1.87,True,False
+annual_expanding_retrain_RQ2_lstm_fixed_053_048_vol_targeting,All_Trades,0,20,138757961,38.76,7.11,True,True
+annual_expanding_retrain_RQ2_lstm_fixed_053_048_vol_targeting,Excl_Top_1_Best_Trade,1,19,126283196,26.28,5.02,True,True
+annual_expanding_retrain_RQ2_lstm_fixed_053_048_vol_targeting,Excl_Top_2_Best_Trades,2,18,120564326,20.56,4.0,True,False
+annual_expanding_retrain_RQ2_lstm_fixed_053_048_vol_targeting,Excl_Top_3_Best_Trades,3,17,110493382,10.49,2.12,True,False
+frozen_2016_2021_RQ2_ensemble_quantile_q80_q30_all_in_out,All_Trades,0,27,141196777,41.2,7.51,True,True
+frozen_2016_2021_RQ2_ensemble_quantile_q80_q30_all_in_out,Excl_Top_1_Best_Trade,1,26,102550532,2.55,0.53,True,False
+frozen_2016_2021_RQ2_ensemble_quantile_q80_q30_all_in_out,Excl_Top_2_Best_Trades,2,25,86716041,-13.28,-2.95,False,False
+frozen_2016_2021_RQ2_ensemble_quantile_q80_q30_all_in_out,Excl_Top_3_Best_Trades,3,24,69528587,-30.47,-7.34,False,False
+frozen_2016_2021_RQ2_svm_quantile_q70_q40_vol_targeting,All_Trades,0,44,131650263,31.65,5.94,True,True
+frozen_2016_2021_RQ2_svm_quantile_q70_q40_vol_targeting,Excl_Top_1_Best_Trade,1,43,110254416,10.25,2.07,True,False
+frozen_2016_2021_RQ2_svm_quantile_q70_q40_vol_targeting,Excl_Top_2_Best_Trades,2,42,103195667,3.2,0.66,True,False
+frozen_2016_2021_RQ2_svm_quantile_q70_q40_vol_targeting,Excl_Top_3_Best_Trades,3,41,89889251,-10.11,-2.21,True,False
