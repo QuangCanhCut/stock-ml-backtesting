@@ -16,8 +16,8 @@ Dự án này đã thực hiện một công trình nghiên cứu định lượ
 
 Hành trình nghiên cứu được triển khai qua 4 giai đoạn chuẩn mực:
 - **Phase 1 (Data Engineering & EDA):** Thu thập, làm sạch dữ liệu vi cấu trúc 10 năm của HPG, kiểm định 7 Stylized Facts và chứng minh tính phi chuẩn, béo đuôi, tự tương quan biến động của thị trường cơ sở.
-- **Phase 2 (Feature Engineering & Labeling):** Xây dựng không gian 88 đặc trưng nhân quả (không rò rỉ dữ liệu) và thiết kế 2 bài toán nhãn: **RQ1** (dự báo hướng giá 1 phiên $Close(t+1)/Close(t)$) và **RQ2** (dự báo lợi nhuận kinh tế 3 phiên sau phí $Open(t+1) \rightarrow Open(t+4)$ theo chu kỳ $T+2.5$).
-- **Phase 3 (Walk-Forward Modeling & Evaluation):** Thiết kế Purged Walk-Forward Cross-Validation (3 Folds), kiểm chuẩn 4 họ mô hình (Dummy, SVM, LightGBM, LSTM), hiệu chuẩn xác suất nhân quả (Platt / Isotonic Calibration), và mở khóa kiểm soát tập Reserved Test (2022–2026).
+- **Phase 2 (Feature Engineering & Labeling):** Xây dựng không gian 26 đặc trưng nhân quả (không rò rỉ dữ liệu) và thiết kế 2 bài toán nhãn: **RQ1** (dự báo hướng giá 1 phiên $Close(t+1)/Close(t)$) và **RQ2** (dự báo lợi nhuận kinh tế 3 phiên sau phí $Open(t+1) \rightarrow Open(t+4)$ theo chu kỳ $T+2.5$).
+- **Phase 3 (Walk-Forward Modeling & Evaluation):** Thiết kế Purged Walk-Forward Cross-Validation (3 Folds), kiểm chuẩn 4 họ mô hình (Dummy, SVM, LightGBM, LSTM), hiệu chuẩn xác suất nhân quả (Platt Calibration (fit trên Out-of-Fold Dev)), và mở khóa kiểm soát tập Reserved Test (2022–2026).
 - **Phase 4 (Backtesting & HOSE Microstructure Execution):** Xây dựng động cơ khớp lệnh Event-Driven tuân thủ 100% luật vi cấu trúc HOSE (chu kỳ thanh toán $T+2.5$, lô chẵn 100, bộ lọc trần/sàn $\pm 6.7\%$, phí 0.50%/vòng quay), chạy mô phỏng trên 114 chiến lược và kiểm tra độ bền vững qua 4 kịch bản ma sát.
 
 ### Kết Luận Cốt Lõi Nhất Của Dự Án:
@@ -56,20 +56,20 @@ Trước khi đưa vào mô phỏng và phân tích, toàn bộ các artifacts n
 
 | Hạng | Tên Chiến lược (`strategy_id`) | NAV Cuối kỳ (VNĐ) | Tổng Lãi (%) | CAGR (%) | Volatility (%) | Sharpe Ratio | Sortino Ratio | Max DD (%) | Win Rate (%) | Trades | Turnover | Lãi vượt B&H |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **BM1**| `buy_and_hold_hpg` | 87,503,200 | -12.50% | -2.76% | 32.03% | -0.0649 | -0.0934 | -67.83% | 100.0% | 1 | 0.21 | 0.00% |
-| **BM2**| `risk_free_cash` | 123,318,989 | +23.32% | +4.50% | 0.00% | 0.0000 | 0.0000 | 0.00% | 0.0% | 0 | 0.00 | +7.26% |
-| **1** | `annual_expanding_retrain_RQ2_lstm_fixed_053_048_all_in_out` | **160,179,634** | **+60.18%** | **+10.40%** | 17.04% | **0.4070** | **0.6430** | **-21.73%** | **60.00%** | **20** | **8.60** | **+13.16%** |
-| **2** | `annual_expanding_retrain_RQ2_lstm_fixed_053_048_vol_targeting` | 139,183,923 | +39.18% | +7.12% | 12.99% | +0.2555 | +0.3913 | -21.64% | 60.00% | 20 | 6.63 | +9.89% |
-| **3** | `annual_expanding_retrain_RQ2_lstm_quantile_q70_q40_all_in_out` | 141,833,268 | +41.83% | +7.61% | 22.99% | +0.2420 | +0.3651 | -36.03% | 58.97% | 39 | 15.68 | +10.37% |
-| **4** | `frozen_2016_2021_RQ2_ensemble_quantile_q80_q30_all_in_out` | 141,196,778 | +41.20% | +7.51% | 20.74% | +0.2403 | +0.3637 | -37.26% | 40.74% | 27 | 10.65 | +10.28% |
-| **5** | `frozen_2016_2021_RQ2_svm_quantile_q70_q40_all_in_out` | 139,949,158 | +39.95% | +7.33% | 20.77% | +0.2318 | +0.3575 | -30.40% | 43.18% | 44 | 17.83 | +10.09% |
-| **6** | `frozen_2016_2021_RQ2_svm_quantile_q70_q40_vol_targeting` | 131,650,290 | +31.65% | +5.94% | 14.44% | +0.1669 | +0.2595 | **-15.01%** | 43.18% | 44 | 12.83 | +8.71% |
-| **7** | `annual_expanding_retrain_RQ1_svm_fixed_053_048_all_in_out` | 124,336,118 | +24.34% | +4.68% | 23.35% | +0.1237 | +0.1842 | -26.56% | 46.15% | 26 | 10.13 | +7.44% |
-| **8** | `annual_expanding_retrain_RQ2_svm_quantile_q80_q30_all_in_out` | 123,782,654 | +23.78% | +4.58% | 17.95% | +0.0939 | +0.1410 | -30.41% | 53.85% | 26 | 10.65 | +7.35% |
-| **9** | `annual_expanding_retrain_RQ1_svm_fixed_053_048_vol_targeting` | 123,878,574 | +23.88% | +4.60% | 16.06% | +0.0861 | +0.1289 | -21.07% | 46.15% | 26 | 7.36 | +7.37% |
-| **10**| `frozen_2016_2021_RQ2_ensemble_quantile_q70_q40_all_in_out` | 116,913,584 | +16.91% | +3.35% | 21.77% | +0.0574 | +0.0856 | -40.21% | 42.55% | 47 | 19.01 | +6.11% |
+| **BM1** | `buy_and_hold_hpg` | 87,503,200 | -12.50% | -2.76% | 32.03% | -0.0649 | -0.0934 | -67.83% | 0.00% | 1 | 0.25 | +0.00% |
+| **BM2** | `risk_free_cash` | 123,318,989 | +23.32% | +4.50% | 0.00% | +0.0000 | +0.0000 | 0.00% | 0.00% | 0 | 0.00 | +7.26% |
+| **1** | `annual_expanding_retrain_RQ2_lstm_fixed_053_048_all_in_out` | **160,179,634** | **+60.18%** | **+10.40%** | 17.04% | **+0.4070** | **+0.6430** | **-21.73%** | **60.00%** | **20** | **8.60** | **+13.16%** |
+| **2** | `annual_expanding_retrain_RQ2_lstm_fixed_053_048_vol_targeting` | 138,757,961 | +38.76% | +7.12% | 12.99% | +0.2555 | +0.3913 | -21.64% | 60.00% | 20 | 6.63 | +9.89% |
+| **3** | `annual_expanding_retrain_RQ2_lstm_quantile_q70_q40_all_in_out` | 141,794,071 | +41.79% | +7.61% | 22.99% | +0.2420 | +0.3651 | -36.03% | 58.97% | 39 | 15.68 | +10.37% |
+| **4** | `frozen_2016_2021_RQ2_ensemble_quantile_q80_q30_all_in_out` | 141,196,777 | +41.20% | +7.51% | 20.74% | +0.2403 | +0.3637 | -37.26% | 40.74% | 27 | 10.65 | +10.28% |
+| **5** | `frozen_2016_2021_RQ2_svm_quantile_q70_q40_all_in_out` | 140,038,463 | +40.04% | +7.33% | 20.77% | +0.2318 | +0.3575 | -30.40% | 43.18% | 44 | 17.83 | +10.09% |
+| **6** | `frozen_2016_2021_RQ2_svm_quantile_q70_q40_vol_targeting` | 131,650,263 | +31.65% | +5.94% | 14.44% | +0.1669 | +0.2595 | -15.01% | 43.18% | 44 | 12.83 | +8.71% |
+| **7** | `annual_expanding_retrain_RQ1_svm_fixed_053_048_all_in_out` | 124,336,069 | +24.34% | +4.68% | 23.35% | +0.1237 | +0.1842 | -26.56% | 46.15% | 26 | 10.13 | +7.44% |
+| **8** | `annual_expanding_retrain_RQ2_svm_quantile_q80_q30_all_in_out` | 123,791,971 | +23.79% | +4.58% | 17.95% | +0.0939 | +0.1410 | -30.41% | 53.85% | 26 | 10.65 | +7.35% |
+| **9** | `annual_expanding_retrain_RQ1_svm_fixed_053_048_vol_targeting` | 123,888,612 | +23.89% | +4.60% | 16.06% | +0.0861 | +0.1289 | -21.07% | 46.15% | 26 | 7.36 | +7.37% |
+| **10** | `frozen_2016_2021_RQ2_ensemble_quantile_q70_q40_all_in_out` | 116,977,563 | +16.98% | +3.35% | 21.77% | +0.0574 | +0.0856 | -40.21% | 42.55% | 47 | 19.01 | +6.11% |
 
-![Đường cong Tăng trưởng NAV](file:///g:/AI_CODE4LIFE/My_Project/Machine_Learning/stock-ml-backtesting/results/backtesting/figures/01_equity_curves_vs_buyhold.png)
+![Đường cong Tăng trưởng NAV](figures/01_equity_curves_vs_buyhold.png)
 
 ---
 
@@ -93,14 +93,14 @@ Trước khi đưa vào mô phỏng và phân tích, toàn bộ các artifacts n
   1. *Đồng bộ nhân quả hoàn hảo:* Nhãn RQ2 được định nghĩa trực tiếp là lợi nhuận kinh tế sau phí từ giá mở cửa phiên mua đến giá mở cửa phiên bán hợp lệ sớm nhất: $y_t = \mathbb{I}[Open(t+4)/Open(t+1) - 1 > 0.0050]$. Mô hình được tối ưu hóa đúng vào thời điểm mà tiền thực sự được giải ngân và thu về.
   2. *Kéo dài chu kỳ nắm giữ tự nhiên:* Mô hình LSTM RQ2 có số phiên nắm giữ trung bình là **19.3 phiên**, biến các lệnh giao dịch thành những đợt nắm giữ theo xu hướng trung hạn, giảm thiểu tối đa số lần chịu phí giao dịch không đáng có.
 
-![Biểu đồ Sụt giảm Underwater](file:///g:/AI_CODE4LIFE/My_Project/Machine_Learning/stock-ml-backtesting/results/backtesting/figures/02_underwater_drawdown.png)
+![Biểu đồ Sụt giảm Underwater](figures/02_underwater_drawdown.png)
 
 ---
 
 ## 5. TỔNG HỢP QUY LUẬT ĐỊNH LƯỢNG ĐA CHIỀU
 
 ### 5.1. Giải Mã Nghịch Lý LSTM (Phase 3 vs. Phase 4)
-Tại Phase 3, LSTM chỉ đạt các chỉ số phân loại nhị phân ở mức khiêm tốn (ROC-AUC ~0.53, Spearman IC ~0.04), khiến nhiều người lầm tưởng LSTM kém hơn LightGBM. Tuy nhiên, khi bước vào Backtesting ở Phase 4, **LSTM lại áp đảo hoàn toàn**:
+Tại Phase 3, LSTM chỉ đạt các chỉ số phân loại nhị phân ở mức khiêm tốn (Spearman Rank IC = -0.0535 (âm do cắt cụt đuôi phải dù Balanced Accuracy đạt 0.5271 và ROC-AUC đạt 0.5355)), khiến nhiều người lầm tưởng LSTM kém hơn LightGBM. Tuy nhiên, khi bước vào Backtesting ở Phase 4, **LSTM lại áp đảo hoàn toàn**:
 - **Cơ chế:** Nhờ kiến trúc bộ nhớ dài hạn (Cell State và Forget Gate), LSTM học được các phụ thuộc thời gian đa chiều (temporal dependencies) mà các mô hình cây quyết định dạng bảng (LightGBM) không nắm bắt được.
 - **Hiệu ứng vùng trễ (Hysteresis Buffer):** Bộ ngưỡng cố định $Entry = 0.53$ và $Exit = 0.48$ đã tạo ra một vùng đệm dao động $\Delta = 0.05$. Khi LSTM đã kích hoạt vị thế Long, nó kiên nhẫn nắm giữ xuyên suốt các đợt rung lắc ngắn hạn nếu xác suất không rơi xuống dưới 0.48. Điều này biến LSTM thành một cỗ máy bắt sóng trung hạn hoàn hảo (chỉ thực hiện 20 giao dịch trong 5 năm).
 
@@ -112,7 +112,7 @@ Tại Phase 3, LSTM chỉ đạt các chỉ số phân loại nhị phân ở m�
 - **Giảm thiểu Rủi ro:** Cơ chế phân bổ vốn theo mục tiêu biến động $\sigma_{target} = 0.25$ đã giúp giảm mức Max Drawdown trung bình của toàn bộ các mô hình ML từ **-43.03%** xuống **-30.38%** (giảm hơn 12.6% điểm phần trăm drawdown).
 - **Lưu ý toán học về Sharpe Ratio:** Khi tỷ suất lợi nhuận trung bình vượt trội $(R - R_f) < 0$ (chiến lược đang chịu lỗ nhẹ), việc giảm độ biến động danh mục mẫu số $\sigma$ sẽ khuếch đại trị tuyệt đối của số âm, làm cho chỉ số Sharpe âm sâu hơn trên giấy tờ. Tuy nhiên, về mặt bảo toàn tài sản thực tế (capital preservation), Volatility Targeting bảo vệ danh mục an toàn hơn rõ rệt.
 
-![Động thái Hiệu suất theo Chu kỳ](file:///g:/AI_CODE4LIFE/My_Project/Machine_Learning/stock-ml-backtesting/results/backtesting/figures/03_yearly_regime_and_rq_comparison.png)
+![Động thái Hiệu suất theo Chu kỳ](figures/03_yearly_regime_and_rq_comparison.png)
 
 ---
 
@@ -121,11 +121,11 @@ Tại Phase 3, LSTM chỉ đạt các chỉ số phân loại nhị phân ở m�
 ### 6.1. Bảng Phân Rã Hiệu Suất Từng Năm
 | Năm | Thị trường Cơ sở (Buy & Hold HPG) | Quán quân ML (LSTM Retrain RQ2 All-in) | Quản trị Rủi ro (SVM Frozen RQ2 Vol-Targeting) |
 | :---: | :---: | :---: | :---: |
-| **2022** | **-48.70%** (Max DD -67.83%) | **-2.12%** (Max DD **-9.96%**, thị trường 6.5%) | **-3.21%** (Max DD **-5.84%**, thị trường 8.2%) |
-| **2023** | **+53.79%** (Max DD -21.00%) | **+28.54%** (Max DD -11.81%, thị trường 40.6%) | **+21.40%** (Max DD -7.20%, thị trường 46.1%) |
-| **2024** | **+4.83%** (Max DD -15.79%) | **-7.25%** (Max DD -21.73%, thị trường 65.6%) | **-2.10%** (Max DD -15.01%, thị trường 52.3%) |
-| **2025** | **+18.54%** (Max DD -24.70%) | **+36.39%** (Max DD **-8.87%**, Sharpe **1.44**) | **+15.82%** (Max DD **-6.12%**, Sharpe **1.08**) |
-| **2026** | **-10.75%** (Max DD -23.32%) | **+0.64%** (Max DD -7.56%, thị trường 15.2%) | **+0.12%** (Max DD -4.85%, thị trường 21.0%) |
+| **2022** | **-48.70%** (Max DD -67.83%, thị trường 100.0%) | **-2.12%** (Max DD **-9.96%**, thị trường 6.5%) | **+3.21%** (Max DD **-13.55%**, thị trường 32.7%) |
+| **2023** | **+53.79%** (Max DD -21.00%, thị trường 100.0%) | **+28.54%** (Max DD **-11.81%**, thị trường 40.6%) | **+19.19%** (Max DD **-9.92%**, thị trường 45.4%) |
+| **2024** | **+4.83%** (Max DD -15.79%, thị trường 100.0%) | **-7.25%** (Max DD **-21.73%**, thị trường 65.6%) | **-5.06%** (Max DD **-9.74%**, thị trường 40.0%) |
+| **2025** | **+18.54%** (Max DD -24.70%, thị trường 100.0%) | **+36.39%** (Max DD **-8.87%**, thị trường 29.3%) | **+25.28%** (Max DD **-5.95%**, thị trường 46.6%) |
+| **2026** | **-10.75%** (Max DD -23.32%, thị trường 100.0%) | **+0.64%** (Max DD **-7.56%**, thị trường 15.2%) | **-10.03%** (Max DD **-13.02%**, thị trường 36.8%) |
 
 ### 6.2. Phân Tích 3 Ca Giao Dịch Điển Hình (Trading Case Studies)
 *(Trích xuất từ 20 giao dịch trong `results/backtesting/trade_case_studies.csv`)*
@@ -148,12 +148,12 @@ Tại Phase 3, LSTM chỉ đạt các chỉ số phân loại nhị phân ở m�
 Bảng biến thiên hiệu suất của Top 1 LSTM qua 4 kịch bản ma sát:
 | Kịch bản Ma sát | Phí Mua (%) | Phí Bán + Thuế (%) | Tổng Vòng Quay (%) | Final NAV (VNĐ) | CAGR (%) | Sharpe Ratio | Max DD (%) | Tổng Chi phí Đã Trả (VNĐ) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Ưu đãi** | 0.15% | 0.15% | **0.30%** | 167,422,102 | **+11.27%** | **0.4533** | -21.42% | 7,805,903 |
+| **Ưu đãi** | 0.15% | 0.15% | **0.30%** | 166,287,098 | **+11.27%** | **0.4533** | -21.42% | 7,805,903 |
 | **Chuẩn HOSE** | 0.20% | 0.30% | **0.50%** | 160,179,634 | **+10.40%** | **0.4070** | -21.73% | 12,797,366 |
-| **Trượt giá cao** | 0.30% | 0.45% | **0.75%** | 151,019,252 | **+9.26%** | **0.3463** | -22.21% | 18,659,018 |
-| **Stress Cực đoan**| 0.40% | 0.60% | **1.00%** | 142,393,316 | **+8.12%** | **0.2847** | -22.79% | 24,215,586 |
+| **Trượt giá cao** | 0.30% | 0.45% | **0.75%** | 152,430,983 | **+9.26%** | **0.3463** | -22.21% | 18,659,018 |
+| **Stress Cực đoan** | 0.40% | 0.60% | **1.00%** | 145,040,414 | **+8.12%** | **0.2847** | -22.79% | 24,215,586 |
 
-![Độ nhạy Ma sát và Vòng quay](file:///g:/AI_CODE4LIFE/My_Project/Machine_Learning/stock-ml-backtesting/results/backtesting/figures/04_cost_sensitivity_and_turnover.png)
+![Độ nhạy Ma sát và Vòng quay](figures/04_cost_sensitivity_and_turnover.png)
 
 > [!TIP]
 > **Nhận định về Ngưỡng Chịu đựng Chi phí:**

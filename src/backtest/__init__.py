@@ -31,6 +31,7 @@ from src.backtest.metrics import (
 from src.backtest.reporting import (
     export_trade_case_studies,
     generate_all_figures,
+    generate_phase4_report,
     plot_cost_sensitivity_and_turnover,
     plot_equity_curves,
     plot_underwater_drawdown,
@@ -70,4 +71,5 @@ __all__ = [
     "plot_yearly_regime_and_rq_comparison",
     "plot_cost_sensitivity_and_turnover",
     "generate_all_figures",
+    "generate_phase4_report",
 ]
